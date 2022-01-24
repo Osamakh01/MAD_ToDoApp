@@ -18,14 +18,14 @@ export default function TaskAddScreen(props){
 
     return (
         <View style={styles.contianer}>
-            <View style={{...styles.textInputContainer, marginTop: 5}}>
+            <View style={{...styles.textInputContainer, marginTop: 20, marginBottom: -10}}>
                 <TextInput 
                     placeholder="Enter task title"
                     value={taskTitle}
                     onChangeText={text => setTaskTitle(text)}
                 />
             </View>
-            <View style={styles.textInputContainer}>
+            <View style={{...styles.textInputContainer, height: 150, justifyContent: 'flex-start'}}>
                 <TextInput 
                     placeholder="Enter your new task"
                     value={taskDescription}

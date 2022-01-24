@@ -79,16 +79,39 @@ export default function TaskListScreen(props) {
 
     return (
         <View style={styles.contianer}>
+            <View style={{
+                marginVertical: 20,
+                backgroundColor: '#C8C8C8',
+                height: 50,
+                justifyContent: 'center',
+                borderRadius: 20,
+                paddingLeft: 20
+            }}>
+                <TextInput
+                    value={searchText}
+                    onChangeText={text => setSearchText(text)}
+                    placeholder='Search'
+                    placeholderTextColor='black'
+                />
+            </View>
             <View>
-                {tasks.length > 0 ? <FlatList
-                    data={tasks}
-                    renderItem={({ item, index }) => {
+                {
+                    searchText.length > 0 ? tasks.filter(singleTaks => {
+                        return singleTaks.title === searchText
+                    }).map((item, index) => {
                         return (
-
                             <View style={styles.taskItemContainer}>
-                                <View>
-                                    <Text style={styles.itemTitleStyle}>{item.title}</Text>
-                                    <Text style={styles.taskDiscriptionStyle}>{item.activity}</Text>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    borderWidth: 3,
+                                    borderColor: 'red'
+                                }}>
+                                    <View>
+                                        <Text style={styles.itemTitleStyle}>{item.title}</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={styles.taskDiscriptionStyle}>{item.activity}</Text>
+                                    </View>
                                 </View>
                                 <View
                                     style={styles.secondaryContainer}
@@ -125,11 +148,64 @@ export default function TaskListScreen(props) {
                                 </View>
                             </View>
                         );
-                    }}
-                    showsVerticalScrollIndicator={false}
-                /> : <View style={styles.noTaskTextContainer}>
-                    <Text style={styles.noTaskTextStyle}>Tap add icon to add task</Text>
-                </View>
+                    }) :
+                        tasks.length > 0 ? <FlatList
+                            data={tasks}
+                            renderItem={({ item, index }) => {
+                                return (
+
+                                    <View style={styles.taskItemContainer}>
+                                        <View style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center'
+                                }}>
+                                    <View>
+                                        <Text style={styles.itemTitleStyle}>{item.title}: </Text>
+                                    </View>
+                                    <View>
+                                        <Text style={styles.taskDiscriptionStyle}>{item.activity}</Text>
+                                    </View>
+                                </View>
+                                        <View
+                                            style={styles.secondaryContainer}
+                                        >
+                                            <View>
+                                                <CheckBox
+                                                    disabled={false}
+                                                    value={item.completed}
+                                                    onValueChange={newValue => {
+                                                        const allTasks = tasks;
+                                                        allTasks[index].completed = newValue
+                                                        setTasks([...allTasks]);
+                                                    }}
+                                                    tintColor="black"
+                                                    onTintColor="white"
+                                                    onCheckColor="white"
+                                                />
+                                            </View>
+                                            <TouchableOpacity
+                                                style={styles.binView}
+                                                onPress={_ => {
+                                                    deleteTask(item.id)
+                                                }}
+                                            >
+                                                <Image
+                                                    source={require('../../assets/delete_icon.png')}
+                                                    style={{
+                                                        width: 30,
+                                                        height: 30,
+                                                        tintColor: 'grey'
+                                                    }}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                );
+                            }}
+                            showsVerticalScrollIndicator={false}
+                        /> : <View style={styles.noTaskTextContainer}>
+                            <Text style={styles.noTaskTextStyle}>Tap add icon to add task</Text>
+                        </View>
                 }
             </View>
             <View style={styles.addIconContainer}>
@@ -177,6 +253,7 @@ const styles = StyleSheet.create({
         // position: 'absolute',
         // bottom: 20,
         // right: 10
+        paddingHorizontal: 20
     },
     headingTextStyle: {
         fontSize: 30,
@@ -187,7 +264,7 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'grey'
+        backgroundColor: 'grey',
     },
     taskItemParentContainer: {
         flexDirection: 'row',
